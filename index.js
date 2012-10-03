@@ -28,7 +28,7 @@ function findRelative(request, directory, parent) {
         , target + '.coffee'
         , target + '/index.js'
     ].forEach(function(attempt) {
-        var ok = fs.existsSync(attempt)
+        var ok = (path.existsSync || fs.existsSync)(attempt)
         exists = ok || exists
         
         if (ok) {
