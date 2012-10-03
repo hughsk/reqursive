@@ -1,0 +1,30 @@
+{
+  "name": "reqursive",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": {
+    "test": "node_modules/.bin/mocha -u tdd --reporter spec"
+  },
+  "license": "BSD",
+  "dependencies": {
+    "detective": "~0.2.1",
+    "async": "~0.1.22",
+    "nub": "0.0.0"
+  },
+  "description": "Take a file and recursively discover all the files loaded in using `require()`.",
+  "devDependencies": {
+    "mocha": "~1.6.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hughsk/reqursive.git"
+  },
+  "keywords": [
+    "recurse",
+    "require",
+    "recursive",
+    "dependency",
+    "resolve"
+  ],
+  "author": "Hugh Kennedy <hughskennedy@gmail.com> (http://hughskennedy.com/)"
+}
