@@ -117,7 +117,19 @@ function getChildren(parent, callback) {
     fs.readFile(filename, 'utf8', function(err, body) {
         if (err) return callback(null, [])
 
-        var modules = detective(body);
+        // Save Esprima from freaking out about
+        // hashbangs
+        body = body.split('\n')
+        if (/^\#!\//.test(body[0])) {
+            body = body.slice(1)
+        }
+        body = body.join('\n')
+
+        try {
+            var modules = detective(body);
+        } catch(e) {
+            return callback(e)
+        }
 
         modules = modules.map(function(id) {
             if (id.match(/^[\.\/]/)) {
@@ -159,6 +171,7 @@ function getChildrenRecursive(entry, options, callback) {
     var results = {}
       , entry = path.resolve(entry)
       , queue = [entry]
+      , first = true
 
     if (typeof options === 'function') {
         callback = options
@@ -181,7 +194,15 @@ function getChildrenRecursive(entry, options, callback) {
         var absolute = path.resolve(queue.shift())
 
         getChildren(absolute, function(err, children) {
-            if (err) return next(err)
+            if (err && first) {
+                return next(err)
+            } else
+            if (err) {
+                results[absolute].error = err
+                return next()
+            }
+
+            first = false
 
             children.forEach(function(child) {
                 if (results[child.filename]) {

@@ -3,11 +3,13 @@ var assert = require('assert')
   , reqursive = require('../index')
 
 var mocks = {
-      'relative':   __dirname + '/mock/relative.js'
-    , 'modules':    __dirname + '/mock/modules.js'
-    , 'native':     __dirname + '/mock/native.js'
-    , 'recursive':  __dirname + '/mock/recursive.js'
-    , 'duplicates': __dirname + '/mock/duplicates.js'
+      'relative':      __dirname + '/mock/relative.js'
+    , 'modules':       __dirname + '/mock/modules.js'
+    , 'native':        __dirname + '/mock/native.js'
+    , 'recursive':     __dirname + '/mock/recursive.js'
+    , 'duplicates':    __dirname + '/mock/duplicates.js'
+    , 'invalid':       __dirname + '/mock/invalid.js'
+    , 'invalidParent': __dirname + '/mock/invalid-parent.js'
 }
 
 suite('reqursive.children', function() {
@@ -208,6 +210,15 @@ suite('reqursive.children', function() {
                 return child.id
             }));
     })
+
+    suite('Invalid Syntax', function(done) {
+        test('Should return an error in the callback', function(done) {
+            children(mocks.invalid, function(err, files) {
+                assert.ok(err)
+                done()
+            })
+        })
+    })
 })
 
 suite('reqursive', function() {
@@ -281,6 +292,26 @@ suite('reqursive', function() {
 
                 assert.equal(found.length, files.length)
                 done()
+            })
+        })
+    })
+
+    suite('Invalid Scripts', function() {
+        test('Should return an error if the parent is invalid', function(done) {
+            reqursive(mocks.invalid, function(err) {
+                assert.ok(err); done()
+            })
+        })
+        test('Should not return an error if only a child is invalid', function(done) {
+            reqursive(mocks.invalidParent, function(err) {
+                assert.ifError(err); done()
+            })
+        })
+        test('Invalid child scripts should contain an error property', function(done) {
+            reqursive(mocks.invalidParent, function(err, files) {
+                assert.ifError(err);
+                assert.ok(files[1].error)
+                done();
             })
         })
     })
