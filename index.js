@@ -42,6 +42,7 @@ function findRelative(request, directory, parent) {
         , 'parents': [parent.filename]
         , 'module': false
         , 'native': false
+        , 'mgroup': parent.mgroup || false
     }
 };
 
@@ -72,6 +73,7 @@ function findModule(request, parent) {
             , 'module': true
             , 'native': true
             , 'parents': [parent.filename]
+            , 'mgroup': request
         };
     } else
     if (!paths || !paths.length) {
@@ -88,6 +90,7 @@ function findModule(request, parent) {
         , 'parents': [parent.filename]
         , 'module': true
         , 'native': false
+        , 'mgroup': id
     };
 };
 
@@ -96,6 +99,7 @@ function entryObject(filename) {
           id: path.basename(filename)
         , parents: []
         , module: false
+        , mgroup: false
         , filename: filename
     };
 };
@@ -193,7 +197,7 @@ function getChildrenRecursive(entry, options, callback) {
     function iteration(next) {
         var absolute = path.resolve(queue.shift())
 
-        getChildren(absolute, function(err, children) {
+        getChildren(results[absolute], function(err, children) {
             if (err && first) {
                 return next(err)
             } else

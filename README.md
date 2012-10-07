@@ -93,3 +93,10 @@ objects, each with the following properties:
   `request` or `browserify`.
 
 * `parents`: An array of scripts that require this file.
+
+* `mgroup`: This is equal to the id of the module this file is a part of.
+  Top-level scripts, i.e. not part of a module, will have an "mgroup" equal to
+  "false".
+
+* `error`: If a syntax error was picked up when parsing this file, it'll go
+  here. Handle this however you please.

@@ -10,6 +10,7 @@ var mocks = {
     , 'duplicates':    __dirname + '/mock/duplicates.js'
     , 'invalid':       __dirname + '/mock/invalid.js'
     , 'invalidParent': __dirname + '/mock/invalid-parent.js'
+    , 'mgroups':       __dirname + '/mock/mgroups.js'
 }
 
 suite('reqursive.children', function() {
@@ -312,6 +313,58 @@ suite('reqursive', function() {
                 assert.ifError(err);
                 assert.ok(files[1].error)
                 done();
+            })
+        })
+    });
+
+    suite('Module Groups', function() {
+        test('Scripts outside of any modules should have "mgroup" set to "false"', function(done) {
+            reqursive(mocks.relative, {
+                traverseModules: false
+            }, function(err, files) {
+                assert.ifError(err)
+                
+                files = files.filter(function(file) {
+                    return !file.module
+                })
+
+                assert.ok(files.length)
+
+                files.forEach(function(file) {
+                    assert.equal(file.mgroup, false)
+                })
+
+                done()
+            })
+        })
+
+        test('A script\'s "mgroup" should be the ID of the closest module ancestor', function(done) {
+            reqursive(mocks.mgroups, {
+                traverseModules: true
+            }, function(err, files) {
+                var modules = files.filter(function(file) {
+                    return file.module
+                }).reduce(function(memo, file) {
+                    memo[file.id] = file 
+                    return memo
+                }, {});
+
+                assert.ifError(err)
+
+                assert.ok(files.length)
+
+                files.forEach(function(file) {
+                    if (!file.parents.length) {
+                        assert.equal(file.mgroup, false)
+                    } else
+                    if (file.module) {
+                        assert.equal(file.mgroup, file.id)
+                    } else {
+                        assert.equal(file.mgroup, 'fake')
+                    }
+                })
+
+                done()
             })
         })
     })
