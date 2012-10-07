@@ -197,7 +197,7 @@ function getChildrenRecursive(entry, options, callback) {
     function iteration(next) {
         var absolute = path.resolve(queue.shift())
 
-        getChildren(results[absolute], function(err, children) {
+        getChildren(results[absolute] || absolute, function(err, children) {
             if (err && first) {
                 return next(err)
             } else
