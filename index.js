@@ -247,10 +247,10 @@ function getChildrenRecursive(entry, options, callback) {
             results[key].parents = nub(
                 results[key].parents || []
             ).map(function(script) {
-                return path.relative(dirname, script)
+                return options.absolute ? script : path.relative(dirname, script)
             })
 
-            if (results[key].filename) {
+            if (results[key].filename && !options.absolute) {
                 results[key].filename = path.relative(dirname, results[key].filename)
             }
 

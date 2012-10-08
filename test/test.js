@@ -511,6 +511,37 @@ suite('reqursive', function() {
                     done()
                 })
             });
+        });
+
+        suite('.absolute', function() {
+            test('When false, should return relative paths'
+                , expect(mocks.mgroups, {
+                    absolute: false
+                }, {
+                    strict: true
+                }, [
+                      'mgroups.js'
+                    , '../node_modules/fake/index.js'
+                ], function(file) {
+                    return file.filename
+                }))
+
+            test('When true, should supply the correct absolute paths', function(done) {
+                var directory = path.dirname(mocks.mgroups)
+
+                expect(mocks.mgroups, {
+                    absolute: true
+                }, {
+                    strict: true
+                }, [
+                      'mgroups.js'
+                    , '../node_modules/fake/index.js'
+                ], function(file) {
+                    // Check path is absolute, Windows-friendly
+                    assert.ok(file.filename.match(/^\/|^[A-Z]{1,2}\:/g))
+                    return path.relative(directory, file.filename)
+                })(done)
+            })
         })
     })
 })

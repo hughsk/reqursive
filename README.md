@@ -121,3 +121,5 @@ The following only apply to `reqursive`, not `reqursive.children`
 
 * `traverseModules`: Don't stop when hitting a module - keep going through the
   module's files too.
+
+* `absolute`: Return absolute paths instead of relative.
