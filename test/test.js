@@ -11,6 +11,8 @@ var mocks = {
     , 'invalid':       __dirname + '/mock/invalid.js'
     , 'invalidParent': __dirname + '/mock/invalid-parent.js'
     , 'mgroups':       __dirname + '/mock/mgroups.js'
+    , 'deeper':        __dirname + '/mock/deeper/index.js'
+    , 'overlap':       __dirname + '/mock/deeper/other.js'
 }
 
 suite('reqursive.children', function() {
@@ -228,7 +230,6 @@ suite('reqursive', function() {
             reqursive(entry, options, function(err, files) {
                 assert.ifError(err)
 
-
                 files.forEach(function(file) {
                     var key = iterator(file, files)
                       , index = values.indexOf(key)
@@ -387,6 +388,68 @@ suite('reqursive', function() {
                 done()
             })
         })
+    })
+
+    suite('Multiple Entry Points', function() {
+        test('Should be relative to the first file (#1)'
+            , expect([
+                  mocks.mgroups
+                , mocks.deeper
+            ], {
+                traverseModules: true
+            }, {
+                strict: true
+            }, [
+                  'mgroups.js'
+                , 'deeper/index.js'
+                , 'deeper/other.js'
+                , '../node_modules/fake/index.js'
+                , '../node_modules/fake/other.js'
+                , '../node_modules/fake/another.js'
+            ], function(file, all) {
+                return file.filename || file.id
+            }))
+
+        test('Should be relative to the first file (#2)'
+            , expect([
+                  mocks.deeper
+                , mocks.mgroups
+            ], {
+                traverseModules: true
+            }, {
+                strict: true
+            }, [
+                  '../mgroups.js'
+                , 'index.js'
+                , 'other.js'
+                , '../../node_modules/fake/index.js'
+                , '../../node_modules/fake/other.js'
+                , '../../node_modules/fake/another.js'
+            ], function(file, all) {
+                return file.filename || file.id
+            }))
+
+        test('Overlapping dependencies should not interfere with results'
+            , expect([
+                  mocks.deeper
+                , mocks.mgroups
+                , mocks.mgroups
+                , mocks.overlap
+                , mocks.overlap
+            ], {
+                traverseModules: true
+            }, {
+                strict: true
+            }, [
+                  'index.js other.js'
+                , 'other.js index.js'
+                , '../mgroups.js '
+                , '../../node_modules/fake/other.js ../../node_modules/fake/index.js'
+                , '../../node_modules/fake/index.js ../mgroups.js'
+                , '../../node_modules/fake/another.js ../../node_modules/fake/other.js'
+            ], function(file, all) {
+                return file.filename + ' ' + file.parents.join(',')
+            }))
     })
 
     suite('options', function() {

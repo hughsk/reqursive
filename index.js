@@ -173,9 +173,9 @@ function getChildren(parent, callback) {
  */
 function getChildrenRecursive(entry, options, callback) {
     var results = {}
-      , entry = path.resolve(entry)
-      , queue = [entry]
+      , entry = Array.isArray(entry) ? entry : [entry]
       , first = true
+      , queue
 
     if (typeof options === 'function') {
         callback = options
@@ -187,7 +187,12 @@ function getChildrenRecursive(entry, options, callback) {
     options = options || {}
     options.traverseModules = !!options.traverseModules
 
-    results[entry] = entryObject(entry)
+    entry = entry.map(function(filename) {
+        filename = path.resolve(filename)
+        results[filename] = entryObject(filename)
+        return filename
+    })
+    queue = [].concat(entry)
 
     async.whilst(function() {
         return queue.length > 0
@@ -236,7 +241,7 @@ function getChildrenRecursive(entry, options, callback) {
         var response = []
 
         Object.keys(results).forEach(function(key) {
-            var dirname = path.dirname(entry)
+            var dirname = path.dirname(entry[0])
               , relative = path.relative(dirname, key)
 
             results[key].parents = nub(

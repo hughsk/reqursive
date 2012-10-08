@@ -59,6 +59,20 @@ reqursive(__filename, {
 })
 ```
 
+You can pass in an array of files to evaluate them together - they don't have
+to be connected, but they can be. If the files are from separate directories,
+the returned paths will be relative to the first file by default.
+
+``` javascript
+reqursive([
+    require.resolve('async')
+  , require.resolve('express')
+], function(err, files) {
+    files[0].filename // index.js
+    files[1].filename // ../node_modules/express/index.js
+})
+```
+
 If you're looking to just get the files required by a single script, you can
 use `reqursive.children()`:
 
@@ -100,3 +114,10 @@ objects, each with the following properties:
 
 * `error`: If a syntax error was picked up when parsing this file, it'll go
   here. Handle this however you please.
+
+## Options
+
+The following only apply to `reqursive`, not `reqursive.children`
+
+* `traverseModules`: Don't stop when hitting a module - keep going through the
+  module's files too.
