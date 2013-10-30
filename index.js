@@ -30,7 +30,7 @@ function findRelative(request, directory, parent) {
     ].forEach(function(attempt) {
         var ok = (path.existsSync || fs.existsSync)(attempt)
         exists = ok || exists
-        
+
         if (ok) {
             target = attempt
         }
@@ -49,7 +49,7 @@ function findRelative(request, directory, parent) {
 /**
  * Finds a file that is required as a module,
  * i.e. require('detective') as opposed to require('./lib/app')
- * 
+ *
  * @param  {String} request   The string supplied to require()
  * @param  {Object} parent    id, filename, etc. of the file calling require()
  */
@@ -166,7 +166,7 @@ function getChildren(parent, callback) {
  * For now there's only one option: "traverseModules".
  * This is enabled by default, but setting it to false
  * will ignore the contents of other modules.
- * 
+ *
  * @param  {String}   entry    The initial filename
  * @param  {Object}   options  (optional)
  * @param  {Function} callback (optional)
@@ -200,7 +200,9 @@ function getChildrenRecursive(entry, options, callback) {
      , finished)
 
     function iteration(next) {
-        var absolute = path.resolve(queue.shift())
+        var nextFile = queue.shift()
+        if (!nextFile) return next()
+        var absolute = path.resolve(nextFile)
 
         getChildren(results[absolute] || absolute, function(err, children) {
             if (err && first) {
@@ -223,7 +225,7 @@ function getChildrenRecursive(entry, options, callback) {
                     child.native ? 'native::' + child.id :
                     child.filename
                 ] = child
-                
+
                 if (child.native) return;
 
                 if (!child.module || options.traverseModules) {
