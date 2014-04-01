@@ -9,7 +9,8 @@
   "dependencies": {
     "detective": "~0.2.1",
     "async": "~0.1.22",
-    "nub": "0.0.0"
+    "nub": "0.0.0",
+    "minimist": "0.0.8"
   },
   "description": "Take a file and recursively discover all the files loaded in using `require()`.",
   "devDependencies": {
