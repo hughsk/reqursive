@@ -16,6 +16,7 @@
   "devDependencies": {
     "mocha": "~1.6.0"
   },
+  "bin": "./bin/reqursive.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/hughsk/reqursive.git"
