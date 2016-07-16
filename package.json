@@ -7,10 +7,10 @@
   },
   "license": "BSD",
   "dependencies": {
-    "detective": "^4.3.1",
     "async": "~0.1.22",
-    "nub": "0.0.0",
-    "minimist": "0.0.8"
+    "detective-es6": "^1.1.5",
+    "minimist": "0.0.8",
+    "nub": "0.0.0"
   },
   "description": "Take a file and recursively discover all the files loaded in using `require()`.",
   "devDependencies": {
