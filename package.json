@@ -1,16 +1,16 @@
 {
   "name": "reqursive",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "main": "index.js",
   "scripts": {
     "test": "node_modules/.bin/mocha -u tdd --reporter spec"
   },
   "license": "BSD",
   "dependencies": {
-    "detective": "~0.2.1",
     "async": "~0.1.22",
-    "nub": "0.0.0",
-    "minimist": "0.0.8"
+    "detective-es6": "^1.1.5",
+    "minimist": "0.0.8",
+    "nub": "0.0.0"
   },
   "description": "Take a file and recursively discover all the files loaded in using `require()`.",
   "devDependencies": {

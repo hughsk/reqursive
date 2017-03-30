@@ -1,4 +1,4 @@
-var detective = require('detective')
+var detective = require('detective-es6')
   , async = require('async')
   , nub = require('nub')
   , fs = require('fs')
